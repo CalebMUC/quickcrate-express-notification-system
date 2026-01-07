@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "7g1d/cj8d1aWUfXV2UoSYacBTaLfaP20sIl1p543QfS3TjEdlSD3Cc+sig28im9yJUh++x5AB8D+JLcNfCeWtQ==",
+  "success": true,
+  "projectFilePath": "/home/caleb/projects/quickcrate-express-notification-system/backend/Notification.Application/Notification.Application.csproj",
+  "expectedPackageFiles": [
+    "/home/caleb/.nuget/packages/fluentvalidation/11.9.0/fluentvalidation.11.9.0.nupkg.sha512",
+    "/home/caleb/.nuget/packages/mediatr/12.2.0/mediatr.12.2.0.nupkg.sha512",
+    "/home/caleb/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
+    "/home/caleb/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../buildMultiTargeting/Quickcrate.Notification.Api.props" />
-</Project>
