@@ -1,0 +1,82 @@
+version: '3.8'
+services:
+
+  postgres: 
+    image: postgres:16-alpine
+    conatiner_name: notification-postgres
+    environment:
+      - POSTGRES_DB: notificationDb
+      - POSTGRES_USER: notificationUser
+      - POSTGRES_PASSWORD: PASS
+    ports: 
+      - "5432:5432"
+    volumes: 
+      - ./docker/postgres:/var/lib/postgresql/data
+    networks:
+      - notification-networks
+    healthcheck:
+       test: ["CMD-SHELL", "pg_isready -U notificationuser -d notificationdb"]
+       interval: 10s
+       timeout: 5s
+       retries: 10        
+  rabbitmq :
+    image: rabbitmq:3-management-alpine
+    conatiner_name: notification-rabbitmq
+    enviroment: 
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports: 
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./docker/rabbitmq:/var/lib/rabbitmq
+    networks:
+      - notification-networks
+    healtcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 10s
+      retries: 5  
+
+  notification-api:
+    build:
+      context: ./backend
+      dockerfile: ../docker/Dockerfile.Api 
+    container_name: notification-api
+    enviroment: 
+      - ASPNETCORE_ENVIROMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "5000:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy 
+    networks:
+      - notification-network 
+
+  notification-worker:
+    build:
+      context: ./backend
+      dockerfile: ../docker/Dockerfile.Worker
+    container_name: notification-worker
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+    depends_on:
+      sql-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      notification-api:
+        condition: service_started
+    networks:
+      - notification-network        
+
+networks:
+  notification-network:
+    driver: bridge
+
+volumes:
+  sql-data:
+  rabbitmq-data:

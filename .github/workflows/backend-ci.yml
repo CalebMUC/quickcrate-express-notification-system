@@ -1,0 +1,32 @@
+name: BackendCI
+
+on:
+  push:
+    paths: 
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+  pull_request:
+    paths:
+      - "backend/**"
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: setup .NET             
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.0
+      - name: Restore depedencies
+        run: dotnet Restore
+        working-directory: backend
+
+      - name: build
+        run: dotnet build --no-restore --configuration Release
+        working-directory: backend
+        
+      - name: test
+        run: dotnet test --no-restore --configuration Release     
